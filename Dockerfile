@@ -129,6 +129,13 @@ RUN wget ${DEP_URL} && \
     mv dep-linux-386 /usr/local/bin/dep && \
     chmod +x /usr/local/bin/dep
 
+ARG HRB_VERSION=1.0.0
+ARG HRB_URL=https://github.com/stakater/HelmRequirementsBuilder/releases/download/${HRB_VERSION}/HelmRequirementsBuilder
+
+RUN wget ${HRB_URL} && \
+    mv HelmRequirementsBuilder /usr/local/bin/ && \
+    chmod +x /usr/local/bin/HelmRequirementsBuilder
+
 ADD bootstrap.sh /
 
 ADD binaries/* /usr/local/bin/
