@@ -85,7 +85,7 @@ RUN mkdir -p /aws && \
     rm terraform_0.11.8_linux_amd64.zip
 
 # Install helm, and landscaper
-ARG HELM_VERSION=v2.7.2
+ARG HELM_VERSION=v2.11.0
 ARG HELM_FILENAME=helm-${HELM_VERSION}-linux-amd64.tar.gz
 ARG HELM_URL=http://storage.googleapis.com/kubernetes-helm/${HELM_FILENAME}
 
