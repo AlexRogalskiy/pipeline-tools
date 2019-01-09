@@ -136,6 +136,18 @@ RUN wget ${HRB_URL} && \
     mv HelmRequirementsBuilder /usr/local/bin/ && \
     chmod +x /usr/local/bin/HelmRequirementsBuilder
 
+ARG SONAR_SCANNER_VERSION=3.2.0.1227
+ARG SONAR_SCANNER_DIR=sonar-scanner-${SONAR_SCANNER_VERSION}-linux
+ARG SONAR_SCANNER_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip
+
+RUN wget ${SONAR_SCANNER_URL} -P /tmp \
+  && unzip sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip -d /tmp \
+  && chmod +x /tmp/${SONAR_SCANNER_DIR}/bin/* \
+  && mv /tmp/${SONAR_SCANNER_DIR} /bin \
+  && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner /bin/sonar-scanner \
+  && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner-debug /bin/sonar-scanner-debug \
+  && rm -rf /tmp/*
+
 ADD bootstrap.sh /
 
 ADD binaries/* /usr/local/bin/
