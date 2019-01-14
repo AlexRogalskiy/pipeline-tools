@@ -27,7 +27,7 @@ ENV DOCKER_API_VERSION=1.32
 
 # Install ansible, boto, aws-cli, and some handy tools
 RUN echo "===> Installing Utilities from apk ..."  && \
-    apk -v --update --progress add sudo git bash wget openssh groff less python py-pip curl jq unzip nodejs nodejs-npm coreutils python py-pip openssl ca-certificates make sshpass openssh-client rsync gnupg gettext && \
+    apk -v --update --progress add sudo git bash wget openssh groff less python py-pip curl jq unzip nodejs nodejs-npm coreutils python py-pip openssl ca-certificates make sshpass openssh-client rsync gnupg gettext openjdk8-jre=8.191.12-r0 && \
     \
     apk --update add --virtual build-dependencies \
                 python-dev libffi-dev openssl-dev build-base   && \
@@ -135,6 +135,19 @@ ARG HRB_URL=https://github.com/stakater/HelmRequirementsBuilder/releases/downloa
 RUN wget ${HRB_URL} && \
     mv HelmRequirementsBuilder /usr/local/bin/ && \
     chmod +x /usr/local/bin/HelmRequirementsBuilder
+
+ARG SONAR_SCANNER_VERSION=3.3.0.1492
+ARG SONAR_SCANNER_DIR=sonar-scanner-cli
+ARG SONAR_SCANNER_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip
+
+RUN wget ${SONAR_SCANNER_URL} -P /tmp \
+  && unzip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip -d /tmp \
+  && chmod +x /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}/bin/* \
+  && mkdir -p /bin/${SONAR_SCANNER_DIR} \
+  && mv /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}/* /bin/${SONAR_SCANNER_DIR}/ \
+  && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner /bin/sonar-scanner \
+  && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner-debug /bin/sonar-scanner-debug \
+  && rm -rf /tmp/*
 
 ADD bootstrap.sh /
 

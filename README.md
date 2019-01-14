@@ -51,6 +51,7 @@ This repo is part of a parent project to achieve the ability of possibility of c
 * https://github.com/wodby/gotpl
 * https://install.goreleaser.com/github.com/golangci/golangci-lint.sh
 * https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-386
+* https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
 
 ##### Infrastructure
 
