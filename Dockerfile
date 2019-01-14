@@ -6,7 +6,7 @@ RUN mkdir -p $GOPATH/src/github.com/operator-framework && \
     cd $GOPATH/src/github.com/operator-framework && \
     git clone https://github.com/operator-framework/operator-sdk && \
     cd operator-sdk && \
-    git checkout master && \
+    git checkout tags/v0.2.1 && \
     make dep && \
     make install
 
@@ -85,7 +85,7 @@ RUN mkdir -p /aws && \
     rm terraform_0.11.8_linux_amd64.zip
 
 # Install helm, and landscaper
-ARG HELM_VERSION=v2.7.2
+ARG HELM_VERSION=v2.11.0
 ARG HELM_FILENAME=helm-${HELM_VERSION}-linux-amd64.tar.gz
 ARG HELM_URL=http://storage.googleapis.com/kubernetes-helm/${HELM_FILENAME}
 
