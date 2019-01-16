@@ -16,6 +16,7 @@ This repo is part of a parent project to achieve the ability of possibility of c
 * python-pip
 * jq
 * unzip
+* gcc-c++
 * make
 * openssl
 * sshpass

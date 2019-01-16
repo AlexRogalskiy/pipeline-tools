@@ -34,7 +34,7 @@ ENV DOCKER_API_VERSION=1.32
 # Install utilities from yum
 RUN echo "===> Installing Utilities from yum ..."  && \
     yum install -y epel-release && \
-    yum install -y sudo git wget openssh groff less python python-pip jq unzip make openssl \
+    yum install -y sudo git wget openssh groff less python python-pip jq unzip gcc-c++ make openssl \
                   sshpass openssh-clients rsync gnupg gettext which java-1.8.0-openjdk-1.8.0.191.b12 && \
     \
     echo "===> Cleaning YUM cache..."  && \
