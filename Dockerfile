@@ -35,7 +35,7 @@ ENV DOCKER_API_VERSION=1.32
 RUN echo "===> Installing Utilities from yum ..."  && \
     yum install -y epel-release && \
     yum install -y sudo git wget openssh groff less python python-pip jq unzip make openssl \
-                  sshpass openssh-clients rsync gnupg gettext && \
+                  sshpass openssh-clients rsync gnupg gettext which && \
     \
     echo "===> Installing Tools via pip ..." && \
     pip install --upgrade pip cffi && \ 
@@ -56,7 +56,7 @@ RUN mkdir -p /tmp/go/ && \
     tar -xzvf /tmp/go/go.tar.gz -C /tmp/go/ && \
     mv /tmp/go/go /usr/local/bin/go && \
     rm -rf /tmp/* && \
-    mkdir -p /go
+    mkdir -p /go/ /go/bin
 
 ENV GOROOT=/usr/local/go \
     GOPATH=/go \
