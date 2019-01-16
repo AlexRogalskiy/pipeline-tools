@@ -31,18 +31,18 @@ RUN yum update -y
 # This is needed for compatibility with our nodes
 ENV DOCKER_API_VERSION=1.32
 
-# Install ansible, boto, aws-cli, and some handy tools
+# Install utilities from yum
 RUN echo "===> Installing Utilities from yum ..."  && \
     yum install -y epel-release && \
     yum install -y sudo git wget openssh groff less python python-pip jq unzip make openssl \
                   sshpass openssh-clients rsync gnupg gettext which && \
     \
-    echo "===> Installing Tools via pip ..." && \
+    echo "===> Cleaning YUM cache..."  && \
+    yum clean all
+
+RUN echo "===> Installing Tools via pip ..." && \
     pip install --upgrade pip cffi && \ 
     pip install --upgrade ansible boto3 awscli git+https://github.com/makethunder/awsudo.git pywinrm && \
-    \
-    echo "===> Cleaning YUM cache..."  && \
-    yum clean all               && \
     \
     echo "===> Adding hosts for convenience..."  && \
     mkdir -p /etc/ansible                        && \
