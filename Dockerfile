@@ -38,7 +38,8 @@ RUN echo "===> Installing Utilities from yum ..."  && \
                   sshpass openssh-clients rsync gnupg gettext && \
     \
     echo "===> Installing Tools via pip ..." && \
-    pip install --upgrade pip cffi ansible boto3 awscli git+https://github.com/makethunder/awsudo.git pywinrm && \
+    pip install --upgrade pip cffi && \ 
+    pip install --upgrade ansible boto3 awscli git+https://github.com/makethunder/awsudo.git pywinrm && \
     \
     echo "===> Cleaning YUM cache..."  && \
     yum clean all               && \
@@ -49,7 +50,7 @@ RUN echo "===> Installing Utilities from yum ..."  && \
 
 # Install golang
 ARG GO_VERSION=1.11.4
-ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}}.linux-amd64.tar.gz
+ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
 RUN mkdir -p /tmp/go/ && \
     wget ${GO_URL} -O /tmp/go/go.tar.gz && \
     tar -xzvf /tmp/go/go.tar.gz && \
