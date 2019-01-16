@@ -58,7 +58,7 @@ RUN mkdir -p /tmp/go/ && \
     rm -rf /tmp/* && \
     mkdir -p /go/ /go/bin
 
-ENV GOROOT=/usr/local/go \
+ENV GOROOT=/usr/local/bin/go \
     GOPATH=/go \
     PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
