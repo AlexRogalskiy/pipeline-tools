@@ -53,7 +53,7 @@ ARG GO_VERSION=1.11.4
 ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
 RUN mkdir -p /tmp/go/ && \
     wget ${GO_URL} -O /tmp/go/go.tar.gz && \
-    tar -xzvf /tmp/go/go.tar.gz && \
+    tar -xzvf /tmp/go/go.tar.gz -C /tmp/go/ && \
     mv /tmp/go/go /usr/local/bin/go && \
     rm -rf /tmp/* && \
     mkdir -p /go
