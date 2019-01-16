@@ -54,11 +54,12 @@ ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
 RUN mkdir -p /tmp/go/ && \
     wget ${GO_URL} -O /tmp/go/go.tar.gz && \
     tar -xzvf /tmp/go/go.tar.gz -C /tmp/go/ && \
-    mv /tmp/go/go /usr/local/bin/go && \
+    mv /tmp/go/go /usr/local/go && \
     rm -rf /tmp/* && \
+    ln -s /usr/local/go/bin/go /usr/local/bin/go && \
     mkdir -p /go/ /go/bin
 
-ENV GOROOT=/usr/local/bin/go \
+ENV GOROOT=/usr/local/go \
     GOPATH=/go \
     PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
