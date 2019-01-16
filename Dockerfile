@@ -10,62 +10,60 @@ RUN mkdir -p $GOPATH/src/github.com/operator-framework && \
     make dep && \
     make install
 
-FROM golang:1.11.0-alpine3.8
+FROM stakater/base-centos:7
+
+LABEL name="Pipeline Tools" \
+      maintainer="Stakater <stakater@aurorasolutions.io>" \
+      vendor="Stakater" \
+      summary="A docker image containing tools required for pipelines"
+
+# Change to user root to
+USER root
 
 COPY --from=operator-sdk-builder /go/bin/operator-sdk /usr/local/bin
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/
 
-MAINTAINER Stakater <stakater@gmail.com>
-
-# Update apk repository list in separate layer
+# Update repository list in separate layer
 # so that install layer does not run everytime
-RUN apk update
+RUN yum update -y
 
 # This is needed for compatibility with our nodes
 ENV DOCKER_API_VERSION=1.32
 
 # Install ansible, boto, aws-cli, and some handy tools
-RUN echo "===> Installing Utilities from apk ..."  && \
-    apk -v --update --progress add sudo git bash wget openssh groff less python py-pip curl jq unzip nodejs nodejs-npm coreutils python py-pip openssl ca-certificates make sshpass openssh-client rsync gnupg gettext openjdk8-jre=8.191.12-r0 && \
+RUN echo "===> Installing Utilities from yum ..."  && \
+    yum install -y epel-release && \
+    yum install -y sudo git wget openssh groff less python python-pip jq unzip make openssl \
+                  sshpass openssh-clients rsync gnupg gettext && \
     \
-    apk --update add --virtual build-dependencies \
-                python-dev libffi-dev openssl-dev build-base   && \
-    pip install --upgrade pip cffi                              && \
+    echo "===> Installing Tools via pip ..." && \
+    pip install --upgrade pip cffi ansible boto3 awscli git+https://github.com/makethunder/awsudo.git pywinrm && \
     \
-    \
-    echo "===> Installing Ansible..."  && \
-    pip install ansible                && \
-    \
-    \
-    echo "===> Installing Boto..."  && \
-    pip install boto3                && \
-    \
-    \
-    echo "===> Installing Aws-Cli..."  && \
-    pip install awscli                && \
-    \
-    \
-    echo "===> Installing Awsudo..."  && \
-    pip install git+https://github.com/makethunder/awsudo.git  && \
-    \
-    \
-    echo "===> Installing handy tools (not absolutely required)..."  && \
-    pip install --upgrade pywinrm                  && \
-    \
-    \
-    echo "===> Removing package list..."  && \
-    apk del build-dependencies            && \
-    rm -rf /var/cache/apk/*               && \
-    \
+    echo "===> Cleaning YUM cache..."  && \
+    yum clean all               && \
     \
     echo "===> Adding hosts for convenience..."  && \
     mkdir -p /etc/ansible                        && \
     echo 'localhost' > /etc/ansible/hosts
 
+# Install golang
+ARG GO_VERSION=1.11.4
+ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}}.linux-amd64.tar.gz
+RUN mkdir -p /tmp/go/ && \
+    wget ${GO_URL} -O /tmp/go/go.tar.gz && \
+    tar -xzvf /tmp/go/go.tar.gz && \
+    mv /tmp/go/go /usr/local/bin/go && \
+    rm -rf /tmp/* && \
+    mkdir -p /go
+
+ENV GOROOT=/usr/local/go \
+    GOPATH=/go \
+    PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
 # Install gotpl
 ARG GOTPL_VERSION=0.1.5
-ARG GOTPL_URL=https://github.com/wodby/gotpl/releases/download/${GOTPL_VERSION}/gotpl-alpine-linux-amd64-${GOTPL_VERSION}.tar.gz
+ARG GOTPL_URL=https://github.com/wodby/gotpl/releases/download/${GOTPL_VERSION}/gotpl-linux-amd64-${GOTPL_VERSION}.tar.gz
 RUN mkdir -p /tmp/gotpl/ && \
     wget ${GOTPL_URL} -O /tmp/gotpl/gotpl.tar.gz && \
     tar -xzvf /tmp/gotpl/gotpl.tar.gz -C /tmp/gotpl/ && \
@@ -138,10 +136,10 @@ RUN wget ${HRB_URL} && \
 
 ARG SONAR_SCANNER_VERSION=3.3.0.1492
 ARG SONAR_SCANNER_DIR=sonar-scanner-cli
-ARG SONAR_SCANNER_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip
+ARG SONAR_SCANNER_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip
 
 RUN wget ${SONAR_SCANNER_URL} -P /tmp \
-  && unzip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip -d /tmp \
+  && unzip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip -d /tmp \
   && chmod +x /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}/bin/* \
   && mkdir -p /bin/${SONAR_SCANNER_DIR} \
   && mv /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}/* /bin/${SONAR_SCANNER_DIR}/ \
