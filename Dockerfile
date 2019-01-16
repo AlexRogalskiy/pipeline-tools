@@ -48,6 +48,10 @@ RUN echo "===> Installing Tools via pip ..." && \
     mkdir -p /etc/ansible                        && \
     echo 'localhost' > /etc/ansible/hosts
 
+# Install nodejs
+RUN curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash - && \
+    yum install -y nodejs-8.14.1
+
 # Install golang
 ARG GO_VERSION=1.11.4
 ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
@@ -62,6 +66,7 @@ RUN mkdir -p /tmp/go/ && \
 ENV GOROOT=/usr/local/go \
     GOPATH=/go \
     PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+RUN echo "export PATH=$PATH" > /etc/environment
 
 # Install gotpl
 ARG GOTPL_VERSION=0.1.5
