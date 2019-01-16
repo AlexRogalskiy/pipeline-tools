@@ -50,7 +50,7 @@ RUN echo "===> Installing Tools via pip ..." && \
 
 # Install nodejs
 RUN curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash - && \
-    yum install -y nodejs-8.14.1
+    yum install -y nodejs-8.12.0
 
 # Install golang
 ARG GO_VERSION=1.11.4
