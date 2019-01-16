@@ -146,7 +146,7 @@ ARG SONAR_SCANNER_URL=https://binaries.sonarsource.com/Distribution/sonar-scanne
 
 RUN wget ${SONAR_SCANNER_URL} -P /tmp \
   && unzip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip -d /tmp \
-  && chmod +x /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}/bin/* \
+  && chmod +x /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin/* \
   && mkdir -p /bin/${SONAR_SCANNER_DIR} \
   && mv /tmp/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/* /bin/${SONAR_SCANNER_DIR}/ \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner /bin/sonar-scanner \
