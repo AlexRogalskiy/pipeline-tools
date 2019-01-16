@@ -63,10 +63,9 @@ RUN mkdir -p /tmp/go/ && \
     ln -s /usr/local/go/bin/go /usr/local/bin/go && \
     mkdir -p /go/ /go/bin
 
-ENV GOROOT=/usr/local/go \
-    GOPATH=/go \
-    PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-RUN echo "export PATH=$PATH" > /etc/environment
+ENV GOROOT /usr/local/go
+ENV GOPATH /go 
+ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
 
 # Install gotpl
 ARG GOTPL_VERSION=0.1.5
