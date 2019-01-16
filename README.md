@@ -6,31 +6,25 @@ This repo is part of a parent project to achieve the ability of possibility of c
 
 #### Tools included
 
-##### Apk packages
-
-* python
-* py-pip
-* openssl
-* ca-certificates
-* python-dev
-* libffi-dev
-* openssl-dev
-* build-base
-* sshpass
-* openssh-client
-* rsync
-* del
-* build-dependencies
+##### Yum packages
 * git
+* wget
 * openssh
 * groff
 * less
 * python
-* curl
+* python-pip
 * jq
 * unzip
 * make
-* nodejs 8.12.0-r0
+* openssl
+* sshpass
+* openssh-clients
+* rsync
+* gnupg
+* gettext
+* which
+* nodejs 8.12.0
 
 ##### PIP packages
 
