@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+set -e # Exit on any child process error
+
+function usage () {
+    echo "awsudo [-h|--help] [-v|--verbose] [-d|--duration-seconds] [-u|--use-credential-store] <role-arn> <sub command>"
+    exit 1
+}
+
+function check_dependency () {
+    if [[ "$(which $1 2> /dev/null)" == "" ]]; then
+        echo "$1 not found, please install and make sure it's on the PATH"
+        exit 1
+    fi
+}
+
+VERBOSE=false
+DURATION_SECONDS=900
+USE_CREDENTIALS_STORE="false"
+POSITIONAL=()
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    # IMPORTANT: We MUST skip options that are not at the very beginning of the command.
+    # Otherwise we could be stripping options being sent to the subcommand
+    -h|--help)
+    if [[ "${#POSITIONAL[@]}" = 0 ]]; then
+        usage 
+    else
+        POSITIONAL+=("$1")
+        shift
+    fi
+    ;;
+    -v|--verbose)
+    if [[ "${#POSITIONAL[@]}" = 0 ]]; then
+        VERBOSE=true
+        shift
+    else
+        POSITIONAL+=("$1")
+        shift
+    fi
+    ;;
+    -d|--duration-seconds)
+    if [[ "${#POSITIONAL[@]}" = 0 ]]; then
+        DURATION_SECONDS=$2
+        shift 2
+    else
+        POSITIONAL+=("$1")
+        shift
+    fi
+    ;;
+    -u|--use-credential-store)
+    if [[ "${#POSITIONAL[@]}" = 0 ]]; then
+        USE_CREDENTIALS_STORE="true"
+        shift
+    else
+        POSITIONAL+=("$1")
+        shift
+    fi
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1")
+    shift
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+ROLE_ARN=$1
+[[ -z ${ROLE_ARN} ]] && usage
+shift
+
+if [[ ${ROLE_ARN} =~ ^arn:aws:iam ]]; then
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Using RoleArn: ${ROLE_ARN}"
+        echo "Using Duration: ${DURATION_SECONDS}"
+    fi
+else
+    echo "Invalid role arn provided. Provided value: ${ROLE_ARN}"
+    exit 1
+fi
+
+check_dependency "jq"
+check_dependency "aws"
+
+# Assume role for running cloud formation
+if [[ "$USE_CREDENTIALS_STORE" == "true" ]]; then
+    tmpfile=$(mktemp /tmp/awssudo.XXXXXX)
+
+    cat >${tmpfile} <<EOL
+[default]
+credential_source=Ec2InstanceMetadata
+EOL
+
+    export AWS_CONFIG_FILE="$tmpfile"
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Using AWS_CONFIG_FILE:"
+        cat ${tmpfile}
+        echo ""
+    fi
+fi
+
+export CREDENTIALS="$(aws sts assume-role --role-arn ${ROLE_ARN} --role-session-name RoleSession --duration-seconds ${DURATION_SECONDS} --output=json)"
+
+if [[ -f "$tmpfile" ]]; then
+    rm -f ${tmpfile}
+fi
+
+if [[ "$CREDENTIALS" == "" ]]; then
+    echo "Assume role failed!"
+    echo "Exiting."
+    exit 1
+fi
+
+# Set AWS Assumed Role Credentials on ENV
+export AWS_ACCESS_KEY_ID="$(echo -n ${CREDENTIALS}| jq -r '.Credentials.AccessKeyId')"
+export AWS_SECRET_ACCESS_KEY="$(echo -n ${CREDENTIALS}| jq -r '.Credentials.SecretAccessKey')"
+export AWS_SESSION_TOKEN="$(echo -n ${CREDENTIALS}| jq -r '.Credentials.SessionToken')"
+export AWS_EXPIRATION="$(echo -n ${CREDENTIALS}| jq -r '.Credentials.Expiration')"
+
+eval $@
