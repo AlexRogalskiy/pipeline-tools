@@ -153,6 +153,8 @@ RUN wget ${SONAR_SCANNER_URL} -P /tmp \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner-debug /bin/sonar-scanner-debug \
   && rm -rf /tmp/*
 
+RUN yum install -y podman
+
 ADD bootstrap.sh /
 
 ADD binaries/* /usr/local/bin/
