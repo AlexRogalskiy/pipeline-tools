@@ -124,11 +124,37 @@ RUN wget ${SONAR_SCANNER_URL} -P /tmp \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner /bin/sonar-scanner \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner-debug /bin/sonar-scanner-debug \
   && rm -rf /tmp/*
-ARG PODMAN_VERSION=1.4.4
+# conman needs to be installed separately
+RUN yum install -y \
+  		atomic-registries \
+  	 	btrfs-progs-devel \
+  	 	containernetworking-cni \
+  	 	device-mapper-devel \
+  	 	glib2-devel \
+  	 	glibc-devel \
+  	 	glibc-static \
+  	 	go \
+  	 	golang-github-cpuguy83-go-md2man \
+  	 	gpgme-devel \
+  	 	iptables \
+  	 	libassuan-devel \
+  	 	libgpg-error-devel \
+  		libseccomp-devel \
+  		libselinux-devel \
+  		ostree-devel \
+  		pkgconfig \
+  		runc \
+  		containers-common \
+    && git clone https://github.com/containers/conmon \ 
+	  && cd conmon \
+  	&& make PREFIX=/usr \
+	  && make podman PREFIX=/usr
+ARG PODMAN_VERSION=1.5.0
 ARG PODMAN_URL=http://mirror.centos.org/centos/7/extras/x86_64/Packages/podman-${PODMAN_VERSION}-2.el7.centos.x86_64.rpm
-RUN wget ${PODMAN_URL} \
-  && yum install -y ./podman-${PODMAN_VERSION}-2.el7.centos.x86_64.rpm
-
+RUN wget https://github.com/containers/libpod/archive/v${PODMAN_VERSION}.tar.gz \
+  && tar -xvzf v${PODMAN_VERSION}.tar.gz \
+  && cd libpod-${PODMAN_VERSION}/ \
+  && make binaries && make install PREFIX=/usr
 ADD bootstrap.sh /
 ADD binaries/* /usr/local/bin/
 ENTRYPOINT ["/bootstrap.sh"]
