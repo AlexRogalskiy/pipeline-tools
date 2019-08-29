@@ -124,7 +124,10 @@ RUN wget ${SONAR_SCANNER_URL} -P /tmp \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner /bin/sonar-scanner \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner-debug /bin/sonar-scanner-debug \
   && rm -rf /tmp/*
-RUN yum install -y podman
+ARG PODMAN_VERSION=1.4.4
+RUN PODMAN_URL=http://mirror.centos.org/centos/7/extras/x86_64/Packages/podman-${PODMAN_VERSION}-2.el7.centos.x86_64.rpm
+RUN wget ${PODMAN_URL}
+RUN yum install ./podman-${PODMAN_VERSION}-2.el7.centos.x86_64.rpm
 
 ADD bootstrap.sh /
 ADD binaries/* /usr/local/bin/
