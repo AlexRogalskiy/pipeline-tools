@@ -124,6 +124,11 @@ RUN wget ${SONAR_SCANNER_URL} -P /tmp \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner /bin/sonar-scanner \
   && ln -s /bin/${SONAR_SCANNER_DIR}/bin/sonar-scanner-debug /bin/sonar-scanner-debug \
   && rm -rf /tmp/*
+ARG ECR_CREDENTIALS_HELPER_VERSION=0.3.1
+ARG ECR_CREDENTIALS_HELPER_URL=https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIALS_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login
+RUN wget ${ECR_CREDENTIALS_HELPER_URL} \
+  && mv docker-credential-ecr-login /usr/bin \
+  && chmod +x /usr/bin/docker-credential-ecr-login
 ADD bootstrap.sh /
 ADD binaries/* /usr/local/bin/
 ENTRYPOINT ["/bootstrap.sh"]
