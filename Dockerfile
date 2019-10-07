@@ -41,7 +41,7 @@ RUN echo "===> Installing Tools via pip ..." && \
 RUN curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash - && \
     yum install -y nodejs-8.12.0
 # Install golang
-ARG GO_VERSION=1.11.4
+ARG GO_VERSION=1.13.1
 ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
 RUN mkdir -p /tmp/go/ && \
     wget ${GO_URL} -O /tmp/go/go.tar.gz && \
