@@ -92,7 +92,7 @@ RUN curl -L ${HELM_URL} | tar zxv -C /tmp \
     && chmod +x jx-release-version \
     && mv jx-release-version /bin/jx-release-version \
     && rm -rf /tmp/* 
-ARG GORELEASER_VERSION=v0.79.0
+ARG GORELEASER_VERSION=v0.119.0
 ARG GORELEASER_FILENAME=goreleaser_Linux_x86_64.tar.gz
 ARG GORELEASER_URL=https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/${GORELEASER_FILENAME}
 RUN curl -L ${GORELEASER_URL} | tar zxv -C /tmp \
