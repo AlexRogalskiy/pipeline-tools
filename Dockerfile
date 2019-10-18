@@ -42,6 +42,7 @@ RUN yum install -y curl-devel expat-devel gettext-devel openssl-devel zlib-devel
     echo "export PATH=/usr/local/git/bin:$PATH" >> /etc/bashrc && \
     source /etc/bashrc && \
     mv git /usr/bin/ && \
+    rm -rf /usr/src
 
 RUN echo "===> Installing Tools via pip ..." && \
     pip install --upgrade pip cffi && \ 
