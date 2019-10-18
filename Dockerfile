@@ -100,6 +100,14 @@ RUN curl -L ${GORELEASER_URL} | tar zxv -C /tmp \
   && chmod +x goreleaser \
   && mv /tmp/goreleaser /bin/goreleaser \
   && rm -rf /tmp/*
+ARG PACKR2_VERSION=2.7.1
+ARG PACKR2_FILENAME=packr_${PACKR2_VERSION}_linux_amd64.tar.gz
+ARG PACKR2_URL=https://github.com/gobuffalo/packr/releases/download/v${PACKR2_VERSION}/${PACKR2_FILENAME}
+RUN curl -L ${PACKR2_URL} | tar zxv -C /tmp \
+  && cd /tmp \
+  && chmod +x packr2 \
+  && mv /tmp/packr2 /bin/packr2 \
+  && rm -rf /tmp/*
 ARG GOLANGCI_VERSION=v1.9.3
 ARG GOLANGCI_URL=https://install.goreleaser.com/github.com/golangci/golangci-lint.sh
 RUN curl -sfL ${GOLANGCI_URL} | bash -s -- -b /usr/local/bin ${GOLANGCI_VERSION}
