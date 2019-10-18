@@ -25,11 +25,24 @@ ENV DOCKER_API_VERSION=1.32
 # Install utilities from yum
 RUN echo "===> Installing Utilities from yum ..."  && \
     yum install -y epel-release && \
-    yum install -y sudo git wget openssh groff less python python-pip jq unzip gcc-c++ make openssl \
+    yum install -y sudo wget openssh groff less python python-pip jq unzip gcc-c++ make openssl \
                   sshpass openssh-clients rsync gnupg gettext which java-1.8.0-openjdk-1.8.0.191.b12 && \
     \
     echo "===> Cleaning YUM cache..."  && \
     yum clean all
+
+RUN yum install -y curl-devel expat-devel gettext-devel openssl-devel zlib-devel && \
+    yum install -y gcc perl-ExtUtils-MakeMaker && \
+    mkdir -p /usr/src && \
+    cd /usr/src && \
+    wget https://www.kernel.org/pub/software/scm/git/git-2.21.0.tar.gz && \
+    tar xzf git-2.21.0.tar.gz && \
+    cd git-2.21.0 && \
+    make prefix=/usr/local/git all && \
+    echo "export PATH=/usr/local/git/bin:$PATH" >> /etc/bashrc && \
+    source /etc/bashrc && \
+    mv git /usr/bin/ && \
+
 RUN echo "===> Installing Tools via pip ..." && \
     pip install --upgrade pip cffi && \ 
     pip install --upgrade ansible boto3 awscli git+https://github.com/makethunder/awsudo.git pywinrm && \
