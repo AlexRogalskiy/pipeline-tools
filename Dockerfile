@@ -93,7 +93,7 @@ RUN curl -L ${HELM_URL} | tar zxv -C /tmp \
     && chmod +x jx-release-version \
     && mv jx-release-version /bin/jx-release-version \
     && rm -rf /tmp/* 
-ARG GORELEASER_VERSION=v0.119.0
+ARG GORELEASER_VERSION=v0.127.0
 ARG GORELEASER_FILENAME=goreleaser_Linux_x86_64.tar.gz
 ARG GORELEASER_URL=https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/${GORELEASER_FILENAME}
 RUN curl -L ${GORELEASER_URL} | tar zxv -C /tmp \
@@ -170,16 +170,23 @@ RUN wget ${ECR_CREDENTIALS_HELPER_URL} \
   && mv docker-credential-ecr-login /usr/bin \
   && chmod +x /usr/bin/docker-credential-ecr-login
 
+ARG GIT_VERSION=2.25.1
+ARG GIT_DIR=git-${GIT_VERSION}
+ARG GIT_FILE=${GIT_DIR}.tar.gz
+ARG GIT_URL=https://www.kernel.org/pub/software/scm/git/${GIT_FILE}
+
 RUN yum remove -y git && \
     yum install -y curl-devel expat-devel gettext-devel openssl-devel zlib-devel && \
     yum install -y gcc perl-ExtUtils-MakeMaker && \
     mkdir -p /usr/src && \
     cd /usr/src && \
-    wget https://www.kernel.org/pub/software/scm/git/git-2.21.0.tar.gz && \
-    tar xzf git-2.21.0.tar.gz && \
-    cd git-2.21.0 && \
-    make prefix=/usr/local/git all && \
-    echo "export PATH=/usr/local/git/bin:$PATH" >> /etc/bashrc && \
+    wget ${GIT_URL} && \
+    tar xzf ${GIT_FILE} && \
+    cd ${GIT_DIR} && \
+    ./configure && \
+    make && \
+    make install && \
+    echo "export PATH=/usr/local/bin:$PATH" >> /etc/bashrc && \
     source /etc/bashrc && \
     mv git /usr/bin/ && \
     rm -rf /usr/src
