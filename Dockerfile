@@ -33,7 +33,7 @@ RUN echo "===> Installing Utilities from yum ..."  && \
 
 RUN echo "===> Installing Tools via pip ..." && \
     pip install --upgrade pip cffi && \ 
-    pip install --upgrade ansible boto3 awscli git+https://github.com/makethunder/awsudo.git pywinrm && \
+    pip install --upgrade ansible boto3 awscli==1.18.13 git+https://github.com/makethunder/awsudo.git pywinrm && \
     \
     echo "===> Adding hosts for convenience..."  && \
     mkdir -p /etc/ansible                        && \
