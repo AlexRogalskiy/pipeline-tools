@@ -34,7 +34,7 @@ This repo is part of a parent project to achieve the ability of possibility of c
 * cffi
 * ansible
 * boto
-* awscli
+* awscli==1.18.13
 * pywinrm
 
 ##### Other Binaries
