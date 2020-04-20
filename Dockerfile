@@ -191,6 +191,12 @@ RUN yum remove -y git && \
     mv git /usr/bin/ && \
     rm -rf /usr/src
 
+ARG IAM_AUTHENTICATOR_VERSION=0.5.0
+RUN curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${IAM_AUTHENTICATOR_VERSION}/aws-iam-authenticator_${IAM_AUTHENTICATOR_VERSION}_linux_amd64 && \
+    chmod +x ./aws-iam-authenticator && \
+    mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH && \
+    echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+
 ADD bootstrap.sh /
 ADD binaries/* /usr/local/bin/
 ENTRYPOINT ["/bootstrap.sh"]
