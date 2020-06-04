@@ -197,6 +197,9 @@ RUN curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-au
     mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH && \
     echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 
+# Install Buildah
+RUN yum install -y buildah
+
 ADD bootstrap.sh /
 ADD binaries/* /usr/local/bin/
 ENTRYPOINT ["/bootstrap.sh"]
