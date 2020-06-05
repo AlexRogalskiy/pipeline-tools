@@ -27,6 +27,7 @@ This repo is part of a parent project to achieve the ability of possibility of c
 * which
 * nodejs 8.12.0
 * openjdk (JRE) 1.8.0.191.b12
+* buildah
 
 ##### PIP packages
 
