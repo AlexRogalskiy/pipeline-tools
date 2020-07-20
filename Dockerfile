@@ -39,8 +39,8 @@ RUN echo "===> Installing Tools via pip ..." && \
     mkdir -p /etc/ansible                        && \
     echo 'localhost' > /etc/ansible/hosts
 # Install nodejs
-RUN curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash - && \
-    yum install -y nodejs-8.12.0
+RUN curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash - && \
+    yum install -y nodejs-14.5.0
 # Install golang
 ARG GO_VERSION=1.13.1
 ARG GO_URL=https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
