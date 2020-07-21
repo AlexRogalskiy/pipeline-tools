@@ -162,7 +162,7 @@ ARG PODMAN_VERSION=1.5.0
 ARG PODMAN_URL=http://mirror.centos.org/centos/7/extras/x86_64/Packages/podman-${PODMAN_VERSION}-2.el7.centos.x86_64.rpm
 RUN wget https://github.com/containers/libpod/archive/v${PODMAN_VERSION}.tar.gz \
   && tar -xvzf v${PODMAN_VERSION}.tar.gz \
-  && cd libpod-${PODMAN_VERSION}/ \
+  && cd podman-${PODMAN_VERSION}/ \
   && make binaries && make install PREFIX=/usr
 ARG ECR_CREDENTIALS_HELPER_VERSION=0.3.1
 ARG ECR_CREDENTIALS_HELPER_URL=https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIALS_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login
